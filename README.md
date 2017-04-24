@@ -1,6 +1,10 @@
 ## Simple Maze Generator
 
-A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This Program Was Made On My Current Computer Graphics Courses Finish In 2017. To Create A Maze Of Random Cell Size 8 X 8 (Still Static) I Am Using The Kruskal Algorithmhow It Works By Creating A Path Between Cells. For The Current Implementation Of Kruskal On This Program Still Uses An Array To Store The Data Cell
+A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This Program Was Made On My Current Computer Graphics Courses Finish In 2017. To Create A Maze Of Random Cell Size 8 X 8 (Still Static) I Am Using The Kruskal Algorithmhow It Works By Creating A Path Between Cells. For The Current Implementation Of Kruskal On This Program Still Uses An Array To Store The Data Cell  
+
+**-Program ScreenShoot**  
+
+![Alt text](https://raw.githubusercontent.com/fianekame/Maze-Project/master/Screenshot%20from%202017-04-24%2015%3A31%3A45.png "Image")  
 
 ### - Introduction
 
@@ -42,7 +46,5 @@ _**Create A New Project Glut/Opengl Project After That Just Copy Paste The Code 
 4.Still 2 Dimensional Maze Form
 
 
-**-Program ScreenShoot**  
 
-![Alt text](https://raw.githubusercontent.com/fianekame/Maze-Project/master/Screenshot%20from%202017-04-24%2015%3A31%3A45.png "Image")
 
