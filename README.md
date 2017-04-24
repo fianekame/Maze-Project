@@ -42,6 +42,7 @@ _**Create A New Project Glut/Opengl Project After That Just Copy Paste The Code 
 4.Still 2 Dimensional Maze Form
 
 
-**-Program ScreenShoot**
+**-Program ScreenShoot**  
+
 ![]({{site.baseurl}}//Screenshot%20from%202017-04-24%2015%3A31%3A45.png)
 
