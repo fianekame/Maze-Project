@@ -42,7 +42,7 @@ _**Create A New Project Glut/Opengl Project After That Just Copy Paste The Code 
 **-V-1.0**  
 1.In This Version, The Object The Player Can Still Penetrate The Wall  
 2.Object Player Running (Right, Left, Bottom, Top) With Magnitude 0.1.  
-3.The Shape Of The Maze Can Be Dirandom By Using Button C & Player Can Run A = Left, S = Down, D = To, W = Up  
+3.The Shape Of The Maze Randomed By Using Button C & Player Can Walk A = Left, S = Down, D = To, W = Up  
 4.Still 2 Dimensional Maze Form
 
 
