@@ -104,8 +104,8 @@ class Kruskal{
           }
         }
         while (walk != 0){
-          xRand = (rand() % 8+1)*2-1;
-          yRand = (rand() % 8+1)*2-1;
+          xRand = (rand() % length+1)*2-1;
+          yRand = (rand() % length+1)*2-1;
           goWalk();
         }
       };
@@ -126,7 +126,7 @@ class Kruskal{
         return length;
       }
 
-      int getArraySize(){
+      int getSize(){
         return arrSize;
       };
 };

@@ -7,7 +7,7 @@
 #include"Kruskal.h"
 
 Kruskal myMaze = Kruskal(8);
-int **Map;
+int **Map,ss=8;
 int xPlayer,yPlayer;
 int inDoor,outDoor,xNim,yNim;
 
@@ -63,11 +63,16 @@ void drawNim() {
   drawBox('R',0.66+xNim,0.46+yNim,0.91+xNim,0.55+yNim);
 }
 
+void setOrtho(int size) {
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(-1.5,size*2+2.5,-1.5,size*2+2.5);
+}
 
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);
-  for (int i = 0; i < 17; i++){
-    for (int j = 0; j < 17; j++){
+  for (int i = 0; i < myMaze.getSize(); i++){
+    for (int j = 0; j < myMaze.getSize(); j++){
       if (Map[i][j]==1){
         drawBox('B',j,i,j+1,i+1);
       }
@@ -81,9 +86,21 @@ void display(){
 void input(unsigned char key, int x, int y)
 {
     if (key=='c' || key=='C'){
-      settingUp(8);
+      settingUp(ss);
+      std::cout << ss << '\n';
+      setOrtho(ss);
     }
-    if((key=='w' || key=='W') && yPlayer < 16 && Map[yPlayer+1][xPlayer] != 1){
+    if (key=='5' || key=='6' || key=='7' || key=='8' || key=='9' || key=='0'){
+      if (key=='0') {
+        ss=10;
+      }
+      else{
+        ss = key - '0';
+      }
+      settingUp(ss);
+      setOrtho(ss);
+    }
+    if((key=='w' || key=='W') && yPlayer < myMaze.getLength()*2 && Map[yPlayer+1][xPlayer] != 1){
       yPlayer+=1;
     }
     if((key=='a' || key=='A') && Map[yPlayer][xPlayer-1] != 1){
