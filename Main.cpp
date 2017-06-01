@@ -9,9 +9,16 @@
 Kruskal myMaze = Kruskal(8);
 int **Map,mazeSize=8;
 int xPlayer,yPlayer,playerType=0;
-int inDoor,outDoor;
+int inDoor,outDoor,xNim,yNim,rotBy=1;
+float xRot=-20,yRot,xNimRot,yNimRot,zNimRot;
 bool is3D;
 
+void placeDoor() {
+  inDoor = myMaze.getDorPos();
+  outDoor = myMaze.getDorPos();
+  Map[0][inDoor] = 0;
+  Map[myMaze.getLength()*2][outDoor] = 0;
+}
 void settingUp(int size){
   myMaze = Kruskal(size);
   myMaze.doGenerate();
@@ -22,56 +29,51 @@ void settingUp(int size){
   xPlayer=outDoor;
   yPlayer=myMaze.getLength()*2;
 }
-
-void drawBox(float colR,float colG,float colB,float zPlus,float zMin,float arg1, float arg2, float arg3, float arg4, float alpha) {
+void drawBox(float zPlus,float zMin,float left,float down,float right,float top,float colR,float colG,float colB,float colAlpha) {
+  glColor4f(colR,colG,colB,colAlpha);
   //depan
   //x1 1 y1 2 x2 3
-  glColor4f(colR,colG,1,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg1,arg2,zPlus);
-    glVertex3f (arg3,arg2,zPlus);
-    glVertex3f (arg3,arg4,zPlus);
-    glVertex3f (arg1,arg4,zPlus);
+    glVertex3f (left,down,zPlus);
+    glVertex3f (right,down,zPlus);
+    glVertex3f (right,top,zPlus);
+    glVertex3f (left,top,zPlus);
   glEnd();
   //belakang
-  glColor4f(colR,1,colB,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg1,arg2,zMin);
-    glVertex3f (arg3,arg2,zMin);
-    glVertex3f (arg3,arg4,zMin);
-    glVertex3f (arg1,arg4,zMin);
+    glVertex3f (left,down,zMin);
+    glVertex3f (right,down,zMin);
+    glVertex3f (right,top,zMin);
+    glVertex3f (left,top,zMin);
   glEnd();
+  glColor4f(colR+0.2,colG+0.2,colB+0.2,colAlpha);
   //kiri
-  glColor4f(1,colG,colB,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg1,arg2,zPlus);
-    glVertex3f (arg1,arg4,zPlus);
-    glVertex3f (arg1,arg4,zMin);
-    glVertex3f (arg1,arg2,zMin);
+    glVertex3f (left,down,zPlus);
+    glVertex3f (left,top,zPlus);
+    glVertex3f (left,top,zMin);
+    glVertex3f (left,down,zMin);
   glEnd();
   //kanan
-  glColor4f(1,colR,1,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg3,arg2,zPlus);
-    glVertex3f (arg3,arg2,zMin);
-    glVertex3f (arg3,arg4,zMin);
-    glVertex3f (arg3,arg4,zPlus);
+    glVertex3f (right,down,zPlus);
+    glVertex3f (right,down,zMin);
+    glVertex3f (right,top,zMin);
+    glVertex3f (right,top,zPlus);
   glEnd();
   //bawah
-  glColor4f(0.5,0.5,colB,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg1,arg2,zPlus);
-    glVertex3f (arg1,arg2,zMin);
-    glVertex3f (arg3,arg2,zMin);
-    glVertex3f (arg3,arg2,zPlus);
+    glVertex3f (left,down,zPlus);
+    glVertex3f (left,down,zMin);
+    glVertex3f (right,down,zMin);
+    glVertex3f (right,down,zPlus);
   glEnd();
   //atas
-  glColor4f(colR,0.8,0.8,alpha);
   glBegin(GL_POLYGON);
-    glVertex3f (arg1,arg4,zPlus);
-    glVertex3f (arg3,arg4,zPlus);
-    glVertex3f (arg3,arg4,zMin);
-    glVertex3f (arg1,arg4,zMin);
+    glVertex3f (left,top,zPlus);
+    glVertex3f (right,top,zPlus);
+    glVertex3f (right,top,zMin);
+    glVertex3f (left,top,zMin);
   glEnd();
 }
 void drawNim() {
@@ -89,9 +91,50 @@ void drawNim() {
   drawBox(0.1,-0.1,0.66+xNim,0.81+yNim,0.91+xNim,0.9+yNim,1,0,0.4,1);
   drawBox(0.1,-0.1,0.66+xNim,0.46+yNim,0.91+xNim,0.55+yNim,1,0,0.4,1);
 }
+void drawPlayer() {
+  glColor4f(0.5,1.0,0.0,1.0);
+  glPushMatrix();
+  if (playerType==0) {
+    glTranslatef(xPlayer+0.5,yPlayer+0.5,0);
+    glutSolidCube(1);
+  }else{
+    glTranslatef(xPlayer+0.5,yPlayer+0.5,-0.5);
+    glutSolidCone(0.5,1, 50, 50);
+  }
+  glPopMatrix();
+  //ManualPlayer
+  //drawBox(0.5,-0.5,xPlayer,yPlayer,xPlayer+1,yPlayer+1,0,1,1,1);
+}
+void setOrtho(int size) {
+  size = size+2.5;
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-size,size,-size,size,-size-2.5,size+2.5);
+}
+void setNim() {
+  glPushMatrix();
+  if (is3D==true) {
+    glTranslated(0.5+xNim,0.5+yNim,0);
+    glRotatef(xNimRot,1,0,0);
+    glRotatef(yNimRot,0,1,0);
+    glRotatef(zNimRot,0,0,1);
+    glScalef(0.8,0.8,1);
+    glTranslated(-0.5-xNim,-0.5-yNim,0);
+  }
+  drawNim();
+  glPopMatrix();
+}
+void setDisplay(){
+  glPushMatrix();
+  if (is3D==true) {
+    glRotatef(yRot,0,1,0);
+    glRotatef(xRot,1,0,0);
+  }
+  glTranslatef(-mazeSize-0.5,-mazeSize-0.5,0);
+}
 void display(){
-  setDisplay();
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  setDisplay();
   for (int i = 0; i < myMaze.getSize(); i++){
     for (int j = 0; j < myMaze.getSize(); j++){
       if (Map[i][j]==1){
@@ -103,18 +146,16 @@ void display(){
   //player
   drawPlayer();
   //floor
-  drawBox(-0.51,-0.61,0,0,mazeSize*2+1,mazeSize*2+1,0.7,0.7,0.7,0.2);
+  drawBox(-0.51,-0.61,0,0,mazeSize*2+1,mazeSize*2+1,0.6,0.6,0.6,0.4);
   glPopMatrix();
   glutSwapBuffers();
 }
-
-void nimRot() {
+void nimAnimation() {
   if(rotBy == 0){xNimRot += 0.1;}
   if(rotBy == 1){yNimRot += 0.1;}
   if(rotBy == 2){zNimRot += 0.1;}
   glutPostRedisplay();
 }
-
 void input(unsigned char key, int x, int y)
 {
     if (key=='c' || key=='C'){
@@ -130,18 +171,23 @@ void input(unsigned char key, int x, int y)
       settingUp(mazeSize);
       setOrtho(mazeSize);
     }
-    if(key=='v' || key=='V'){
-        if(is3D==false){
-            is3D = true;
-        }else{
-            is3D = false;
-
     if(key=='p' || key=='P'){
       if (playerType==0) {
         playerType=1;
       }else{
         playerType=0;
       }
+    }
+    if(key=='v' || key=='V'){
+        if(is3D==false){
+            //glRotatef(-25,1,0,0);
+            glutIdleFunc(nimAnimation);
+            is3D = true;
+        }else{
+            //glRotatef(25,1,0,0);
+            glutIdleFunc(NULL);
+            is3D = false;
+        }
     }
     if((key=='w' || key=='W') && yPlayer < myMaze.getLength()*2 && Map[yPlayer+1][xPlayer] != 1){
       yPlayer+=1;
@@ -155,22 +201,46 @@ void input(unsigned char key, int x, int y)
     if((key=='d' || key=='D') && Map[yPlayer][xPlayer+1] != 1){
       xPlayer+=1;
     }
+    if((key=='i' || key=='I' ) && is3D==true){
+      xRot-=1;
+    }
+    if((key=='j' || key=='J' ) && is3D==true){
+      yRot-=1;
+    }
+    if((key=='k' || key=='K' ) && is3D==true){
+      xRot+=1;
+    }
+    if((key=='l' || key=='L' ) && is3D==true){
+      yRot+=1;
+    }
     display();
 }
 
 void mouse(int button, int state, int x, int y){
-    //available soon
+    switch (button){
+        case GLUT_LEFT_BUTTON:
+            if (state == GLUT_DOWN && is3D==true){rotBy=0;}
+        break;
+        case GLUT_MIDDLE_BUTTON:
+            if (state == GLUT_DOWN && is3D==true){rotBy=2;}
+        break;
+        case GLUT_RIGHT_BUTTON:
+            if (state == GLUT_DOWN && is3D==true){rotBy=1;}
+        break;
+        default:
+        break;
+    }
 }
 
 void myinit(){
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
   //3Ddependeci
   glOrtho(-10.5, 10.5, -10.5, 10.5, -12.5, 12.5);
   glMatrixMode(GL_MODELVIEW);
   //3Ddependeci
   glShadeModel(GL_FLAT);
-	glClearColor(1.0,1.0,1.0,1.0);
+  glClearColor(1.0,1.0,1.0,1.0);
   //tranparanceDependeci
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -180,16 +250,15 @@ void myinit(){
 int main(int argc, char* argv[]){
   srand(time(NULL));
   settingUp(8);
-	glutInit(&argc,argv);
+  glutInit(&argc,argv);
   //depth is 3Ddependeci
-	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(500,500);
-	glutCreateWindow("Maze || Kruskal Algorithm");
+  glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH);
+  glutInitWindowSize(500,500);
+  glutCreateWindow("Maze || Kruskal Algorithm");
   myinit();
-	glutDisplayFunc(display);
+  glutDisplayFunc(display);
   glutKeyboardFunc(input);
   glutMouseFunc(mouse);
-	glutMainLoop();
-
-	return 0;
+  glutMainLoop();
+  return 0;
 }
