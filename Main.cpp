@@ -180,11 +180,9 @@ void input(unsigned char key, int x, int y)
     }
     if(key=='v' || key=='V'){
         if(is3D==false){
-            //glRotatef(-25,1,0,0);
             glutIdleFunc(nimAnimation);
             is3D = true;
         }else{
-            //glRotatef(25,1,0,0);
             glutIdleFunc(NULL);
             is3D = false;
         }
