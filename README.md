@@ -77,5 +77,9 @@ To Run This Program In Windows You Can Use The Codeblock IDE ([Get Here](https:/
 
 
 
+License
+----
+
+MIT
 
 
