@@ -6,14 +6,16 @@
 #endif
 #include <math.h>
 #include "Kruskal.h"
+#include "Transversal.h"
 
 Kruskal myMaze = Kruskal(8);
-int **Map,mazeSize=8;
-int xPlayer,yPlayer,playerType=0;
+Transversal myTran = Transversal();
+int **Map,**TransMap,mazeSize=8;
+int xPlayer,yPlayer,xEnemy,yEnemy,playerType=0;
 int inDoor,outDoor,xNim,yNim,rotBy=1;
 float xRot=-20,yRot,xNimRot,yNimRot,zNimRot;
 int viewMode = 0;
-bool isTrans,isMorning;
+bool isTrans,isMorning,isEnemyrun=true;
 bool diff = false, spec = false, amb = false;
 float pos[] = {1,10.5,0};
 float ver[] = {0,-1,0};
@@ -32,10 +34,13 @@ void settingUp(int size){
         xNim = (rand() % myMaze.getLength())*2+1;
         yNim = (rand() % myMaze.getLength())*2+1;
         placeDoor();
+        myTran = Transversal(Map,size*2-1,inDoor);
+        myTran.doTransit();
+        TransMap = myTran.getMap();
         pos[1] = size + 2.5;
         size % 2 == 0 ? pos[0] = 1 : pos[0] = 0;
-        xPlayer=outDoor;
-        yPlayer=myMaze.getLength()*2;
+        xPlayer=outDoor; yPlayer=myMaze.getLength()*2;
+        xEnemy=size*2-1; yEnemy=size*2-1;
 }
 
 void myinit(){
@@ -144,16 +149,23 @@ void drawPlayer() {
         glPushMatrix();
         if (playerType==0) {
                 glTranslatef(xPlayer+0.5,yPlayer+0.5,0);
-                glutSolidCube(1);
+                //glutSolidCube(1);
+                glutSolidSphere(0.5,20,10);
         }else{
                 glTranslatef(xPlayer+0.5,yPlayer+0.5,-0.5);
-                glutSolidCone(0.5,1, 50, 50);
+                glutSolidCone(0.4,1, 50, 50);
         }
         glPopMatrix();
         //ManualPlayer
         //drawBox(0.5,-0.5,xPlayer,yPlayer,xPlayer+1,yPlayer+1,0,1,1,1;
 }
-
+void drawEnemy() {
+        putMaterial(0.0, 1.0, 1.0, 1.0);
+        glPushMatrix();
+        glTranslatef(xEnemy+0.5,yEnemy+0.5,-0.5);
+        glutSolidCone(0.5,1, 50, 50);
+        glPopMatrix();
+}
 void setNim() {
         //TODO: seting up ctm nim only
         putMaterial(1.0, 0.0, 0.0, 1.0);
@@ -184,7 +196,7 @@ void display(){
         myinit();
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         setDisplay();
-        isTrans == true ? putMaterial(0.7,0.7,0.7,0.3) : putMaterial(0.7,0.7,0.7,1.0);
+        isTrans == true ? putMaterial(0.0,0.0,0.8,0.3) : putMaterial(0.0,0.0,0.8,1.0);
         for (int i = 0; i < myMaze.getSize(); i++) {
                 for (int j = 0; j < myMaze.getSize(); j++) {
                         if (Map[i][j]==1) {
@@ -195,14 +207,41 @@ void display(){
         setNim();
         //player
         drawPlayer();
+        //enemy
+        drawEnemy();
         //floor
         putMaterial(1, 1, 1, 0.5);
         drawBox(-0.51,-0.61,0,0,mazeSize*2+1,mazeSize*2+1,0.6,0.6,0.6,0.4);
         glPopMatrix();
         glutSwapBuffers();
-
-
 }
+
+void Timer (int iUnused){
+        if (isEnemyrun && yEnemy != 0) {
+                if (TransMap[yEnemy][xEnemy-1] == 2) {
+                        TransMap[yEnemy][xEnemy] = 0;
+                        xEnemy-=1;
+                }
+                else if (TransMap[yEnemy][xEnemy+1] == 2) {
+                        TransMap[yEnemy][xEnemy] = 0;
+                        xEnemy+=1;
+                }
+                else if (TransMap[yEnemy+1][xEnemy] == 2) {
+                        TransMap[yEnemy][xEnemy] = 0;
+                        yEnemy+=1;
+                }
+                else {
+                        TransMap[yEnemy][xEnemy] = 0;
+                        yEnemy-=1;
+                }
+                glutPostRedisplay();
+                if (xEnemy==inDoor && yEnemy==0) {
+                        isEnemyrun=false;
+                }
+                glutTimerFunc(500,Timer,0);
+        }
+}
+
 void nimAnimation() {
         //CHANGED: change angle size of rotation (animation)
         if(rotBy == 0) {xNimRot += 0.1; }
@@ -216,7 +255,7 @@ void input(unsigned char key, int x, int y){
         }
         if(key=='1') {
                 if (amb == true) {
-                        GLfloat ambient_light[] = { 0.3, 0.3, 0.3, 1.0 };
+                        GLfloat ambient_light[] = { 0.5, 0.5, 0.5, 1.0 };
                         glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient_light);
                         amb=false;
                 }else{
@@ -248,6 +287,10 @@ void input(unsigned char key, int x, int y){
         }
         if(key=='5') {
                 isTrans == true ? isTrans = false : isTrans = true;
+        }
+        if(key==32) {
+                isEnemyrun == true ? isEnemyrun = false : isEnemyrun = true;
+                Timer(0);
         }
         if (key=='+' || key=='-') {
                 key == '+' ? mazeSize+=1 : mazeSize-=1;
@@ -319,9 +362,9 @@ void mouse(int button, int state, int x, int y){
 }
 
 void settingLight() {
-        GLfloat light_position_diff[] = { 10.0, 10.0, 5.0, 0.5 };
+        GLfloat light_position_diff[] = { 10.0, 10.0, 5.0, 0.0};
         GLfloat light_position_spec[] = { 10.0, -10.0, 5.0, 0.0 };
-        GLfloat diffuse_light[] = { 0.5, 0.5, 1.0, 0.5 };
+        GLfloat diffuse_light[] = { 0.8, 0.8, 1.0, 0.5 };
         GLfloat specular_light[] = { 1.0, 1.0, 1.0, 1.0 };
         GLfloat ambient_light[] = { 0.9, 0.9, 0.9, 1.0 };
         glLightfv(GL_LIGHT0, GL_POSITION, light_position_diff);
@@ -355,7 +398,6 @@ void specKey(int key, int x, int y){
                 }
                 display();
         }
-
 }
 int main(int argc, char* argv[]){
         srand(time(NULL));
@@ -364,7 +406,8 @@ int main(int argc, char* argv[]){
         glutInit(&argc,argv);
         glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH);
         glutInitWindowSize(500,500);
-        glutCreateWindow("Maze || Kruskal Algorithm");
+        glutCreateWindow("Maze IV || Kruskal Algorithm");
+        Timer(0);
         glutDisplayFunc(display);
         glutSpecialFunc(specKey);
         glutKeyboardFunc(input);
