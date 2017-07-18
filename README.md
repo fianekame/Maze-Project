@@ -27,6 +27,7 @@ A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This
     - Change Maze size , **"+" to Increase and "-" to Decrease**
     - Arroy Key To Walk Inside Maze While in Fps Mode (ArrowKeyUP , ArrowKeyDOWN , ArrowKeyLEFT, ArrowKeyRIGHT) 
     - Change Nim (ID) Rotation Using Mouse Click (Left,Center,Right)
+    - Space to Run/Stop another one player.
  
 ### Build & Run 
 - **Windows**  
@@ -74,6 +75,7 @@ To Run This Program In Windows You Can Use The Codeblock IDE ([Get Here](https:/
     - Active / Deactive 3 Light usign 1,2,3 Key
     - Tranparant Wall usign the 5 Key
     - Day or Night usign the 4 key
+    - Spaace to Run/Stop another one player.
 
 
 
