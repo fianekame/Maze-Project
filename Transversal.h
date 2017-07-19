@@ -21,12 +21,12 @@ void initArray(int arrSize){
         }
 }
 
-Transversal(int **passMap,int position,int door) {
-        initArray(position+2);
+Transversal(int **passMap,int size,int x,int y,int door) {
+        initArray(size);
         Map = passMap;
-        xAxis = position;
-        yAxis = position;
-        arrSize = position+2;
+        xAxis = x;
+        yAxis = y;
+        arrSize = size;
         Door = door;
 };
 
@@ -51,15 +51,28 @@ bool Solve(int X, int Y) {
         return false;
 }
 
+void rint()
+{
+    for (int i = 0; i < arrSize; i++)
+    {
+        for (int j = 0; j < arrSize; j++)
+        {
+            std::cout << Map[i][j];
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+
+
 void doTransit(){
-        //print();
+        //rint();
         if (!Solve(xAxis,yAxis)) {
                 std::cout << "Dont Have Way" << '\n';
         }
-        //print();
+        //rint();
 }
 int** getMap() {
   return Map;
 };
-
 };

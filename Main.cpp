@@ -20,6 +20,7 @@ bool diff = false, spec = false, amb = false;
 float pos[] = {1,10.5,0};
 float ver[] = {0,-1,0};
 float alpha = 4.71;
+int xRoad,yRoad;
 
 void placeDoor() {
         inDoor = myMaze.getDorPos();
@@ -34,7 +35,7 @@ void settingUp(int size){
         xNim = (rand() % myMaze.getLength())*2+1;
         yNim = (rand() % myMaze.getLength())*2+1;
         placeDoor();
-        myTran = Transversal(Map,size*2-1,inDoor);
+        myTran = Transversal(myMaze.getMap(),mazeSize*2+1,size*2-1,size*2-1,inDoor);
         myTran.doTransit();
         TransMap = myTran.getMap();
         pos[1] = size + 2.5;
@@ -191,6 +192,18 @@ void setDisplay(){
         }
         glTranslatef(-mazeSize-0.5,-mazeSize-0.5,0);
 }
+
+void helperRoad(int xRoad,int yRoad){
+        glBegin(GL_POLYGON);
+        //x,y
+        glColor3f(0,1,0);
+        glVertex3f (xRoad,yRoad,0.0);
+        glVertex3f (xRoad+1,yRoad, 0.0);
+        glVertex3f (xRoad+1,yRoad+1, 0.0);
+        glVertex3f (xRoad,yRoad+1, 0.0);
+        glEnd();
+}
+
 void display(){
         //TODO: drawing the maze player nim and transparent floor
         myinit();
@@ -241,7 +254,6 @@ void Timer (int iUnused){
                 glutTimerFunc(500,Timer,0);
         }
 }
-
 void nimAnimation() {
         //CHANGED: change angle size of rotation (animation)
         if(rotBy == 0) {xNimRot += 0.1; }
@@ -249,6 +261,7 @@ void nimAnimation() {
         if(rotBy == 2) {zNimRot += 0.1; }
         glutPostRedisplay();
 }
+
 void input(unsigned char key, int x, int y){
         if (key=='c' || key=='C') {
                 settingUp(mazeSize);
