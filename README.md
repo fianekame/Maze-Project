@@ -1,7 +1,8 @@
 # Maze Generator 
 [![forthebadge](http://forthebadge.com/badges/built-with-love.svg)](https://github.com/fianekame/Maze-Project)
 
-A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This Program Was Made On My Current Computer Graphics Courses Finish In 2017.  
+A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This Program Was Made On My Current Computer Graphics Courses Finish In 2017. 
+View Release [Here]
 > Thanks : Mr.Yonathan Ferry Hendrawan
 
 ### Introduction
@@ -93,4 +94,4 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so
 
-
+[Here]: <https://github.com/fianekame/Maze-Project/releases>
