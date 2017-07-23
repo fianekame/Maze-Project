@@ -3,6 +3,20 @@
 
 A Simple Program That Makes Random Maze Using Opengl Api With C++ Language. This Program Was Made On My Current Computer Graphics Courses Finish In 2017.  
 > Thanks : Mr.Yonathan Ferry Hendrawan
+
+### Screen
+> 2 Dimension View
+
+![dd](https://raw.githubusercontent.com/fianekame/Maze-Project/master/Image/Screenshot%20from%202017-04-24%2015%3A31%3A45.png)
+
+> 3 Dimension View
+
+![dd](https://raw.githubusercontent.com/fianekame/Maze-Project/master/Image/Screenshot%20from%202017-07-11%2012.25.41.png)
+
+> Camera View (Walking Inside Maze)
+
+![dd](https://raw.githubusercontent.com/fianekame/Maze-Project/master/Image/Screenshot%20from%202017-07-11%2012.26.05.png)
+
 ### Introduction
 
 - [About Kruskal Algorithm](https://www.google.co.id/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwj7u8nykb3TAhUCa7wKHUYZBYcQFggsMAI&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FKruskal%2527s_algorithm&usg=AFQjCNFRRZYfMjMX2s_2V_zHPI03tmnP4A&sig2=NXH3jqAsJtBiHfGz1zL3vQ)
